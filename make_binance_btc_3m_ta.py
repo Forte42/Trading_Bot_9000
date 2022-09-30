@@ -40,6 +40,7 @@ df.loc[df['Bar_Change'] < 0, 'Updown'] = 0
 df['Iupdown'] = 3
 df.loc[df['Intrabar_Change'] > 0, 'Iupdown'] = 1
 df.loc[df['Intrabar_Change'] < 0, 'Iupdown'] = 0
+df['Iconsecutive'] = df['Iupdown'].groupby((df['Iupdown'] != df['Iupdown'].shift()).cumsum()).cumcount() + 1
 
 df['10MA'] = df['Close'].rolling(10).mean().astype(float).round(2)
 df['50MA'] = df['Close'].rolling(50).mean().astype(float).round(2)
