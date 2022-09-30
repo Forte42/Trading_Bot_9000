@@ -1,13 +1,18 @@
 # Trading_Bot_9000
 
----
+## Description 
+
 Ever want to make a trading bot that'll work for you so you can retire and live the good life? So did we!
 
-## User Stories
 
----
+
+## MVP User Stories
 
 Our MVP will be based on the following user stories to start:
+
+As an investor, I want to import historical cryptocurrency data 
+- I expect the cruptocurrency data to have OHLCV data
+- I expect to access cryptocurrency data as a pd.DataFrame
 
 As an investor, I want to use an ML models to use for algorithmic trading.
 - I expect to load the crypto data
@@ -15,11 +20,45 @@ As an investor, I want to use an ML models to use for algorithmic trading.
 - I expect to train/fit the model
 - I expect the model to predict what trades to make
 
-As an investor, I want to 
+As an investor, I want to make trades based on signals from my ML model
+- I expect to use a Alpaca account configured for paper trading
+- I expect to integrate the Alpaca SDK into my trading bot
+- I expect that when I receive a buy signal, my trading bot will buy specified quantity of cryptocurrency
+- I expect that when I receive a sell signal, my trading bot will sell specified quantity of cryptocurrency
+- I expect to see my current orders in Alpaca portal
+- I expect to see my current positions in Alpaca portal 
+
+As an investor, I want my trading bot to run continuously at a specified interval 
+- I expect that my trading bot will train continuously at a specified interval (eg every 10 secs)
+- I expect that my trading bot will predict continuously at a specified interval (eg every 10 secs)
+- I expect that my trading bot will detect a buy/sell signal and execute the trade
+
+
+## Nice-to-Have User Stories
+As an investor, I want to execute the trading bot for several ML models
+- I expect to select different ML model 
+- I expect to view results from trades in different Alpaca accounts
+- I expect to determine which ML model was most successful 
+
+
+## Implementation Tasks
+- Historical Cryptocurrency Data
+-- Dev: David
+-- Reviewers: Quinn, Garrett, Derrick, Ryan, Kristen
+
+- ML Model for Algorithmic Trading 
+-- Dev: Garrett, Derrick, Ryan, Kristen
+-- Reviewers: Quinn, David
+
+- Alpaca Trading Client
+-- Dev: Quinn, Kristen
+-- Reviewers: Garrett, Derrick, Ryan, Kristen
+
+- Automated Trading Bot Processes 
+-- Dev: Quinn, David
+-- Reviewers: Garrett, Derrick, Ryan, Kristen
 
 ## Technology Stack
-
----
 
 This project uses:  
 - Python 3.9.12 
