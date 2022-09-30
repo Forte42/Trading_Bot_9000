@@ -6,7 +6,7 @@ import time
 import datetime
 import pandas as pd
 import numpy as np
-import pandas_ta as pta
+import pandas_ta as pta #use pip install pandas_ta
 
 engine = create_engine("mysql+pymysql://admin:52GxbFuetNqvFn@crypto-db.cb84pseap2n8.us-east-1.rds.amazonaws.com:3306/crypto",)
 
@@ -51,8 +51,7 @@ df['10MAV'] = df['Volume'].rolling(10).mean().astype(float).round(2)
 df['50MAV'] = df['Volume'].rolling(50).mean().astype(float).round(2)
 df['200MAV'] = df['Volume'].rolling(200).mean().astype(float).round(2)
 
-df['RSI'] = pta.rsi(df['Close'], length = 14).astype(float).round(2) #uses pandas-ta rsi function
-df['RSI'] = df['RSI'].astype(float).round(2)
+df['RSI'] = pta.rsi(df['Close'], length = 14).astype(float).round(2) #uses pandas-ta rsi function.  use pip install pandas_ta.
 df['MACD'] = (talib.EMA(df['Close'], 13))-(talib.EMA(df['Close'], 26)).astype(float).round(2).astype(float).round(2) #comment out this line to run without talib dependency
 df['VWAP'] = (np.cumsum(df.Volume * df.Close) / np.cumsum(df.Volume)).astype(float).round(2).astype(float).round(2)
 

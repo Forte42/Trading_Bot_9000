@@ -50,7 +50,6 @@ df['50MAV'] = df['Volume'].rolling(50).mean().astype(float).round(2)
 df['200MAV'] = df['Volume'].rolling(200).mean().astype(float).round(2)
 
 df['RSI'] = pta.rsi(df['Close'], length = 14).astype(float).round(2) #uses pandas-ta rsi function
-df['RSI'] = df['RSI'].astype(float).round(2)
 df['MACD'] = (talib.EMA(df['Close'], 13))-(talib.EMA(df['Close'], 26)).astype(float).round(2).astype(float).round(2) #comment out this line to run without talib dependency
 df['VWAP'] = (np.cumsum(df.Volume * df.Close) / np.cumsum(df.Volume)).astype(float).round(2).astype(float).round(2)
 
