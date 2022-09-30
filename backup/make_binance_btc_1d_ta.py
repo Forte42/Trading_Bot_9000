@@ -12,7 +12,7 @@ engine = create_engine("mysql+pymysql://admin:52GxbFuetNqvFn@crypto-db.cb84pseap
 
 conn = engine.connect()
 
-df = pd.read_sql("SELECT * FROM binance_btc_1m", conn)
+df = pd.read_sql("SELECT * FROM binance_btc_1d", conn)
 
 df.drop('TBB', axis = 1, inplace=True)
 df.drop('TBQ', axis = 1, inplace=True)
@@ -29,17 +29,11 @@ df['Volume'] = df['Volume'].astype(float).astype(float).round(2)
 
 df['Prev_Close'] = df['Close'].shift(1)
 df['Bar_Change'] = df['Close'] - df['Prev_Close']
-df['Intrabar_Change'] = df['Close'] - df['Open']
-
 df['Bar_Range'] = df['High'] - df['Low']
 
-df['Updown'] = 3
-df.loc[df['Bar_Change'] > 0, 'Updown'] = 1
-df.loc[df['Bar_Change'] < 0, 'Updown'] = 0
-
 df['Iupdown'] = 3
-df.loc[df['Intrabar_Change'] > 0, 'Iupdown'] = 1
-df.loc[df['Intrabar_Change'] < 0, 'Iupdown'] = 0
+df.loc[df['Bar_Change'] > 0, 'Iupdown'] = 1
+df.loc[df['Bar_Change'] < 0, 'Iupdown'] = 0
 
 df['10MA'] = df['Close'].rolling(10).mean().astype(float).round(2)
 df['50MA'] = df['Close'].rolling(50).mean().astype(float).round(2)
@@ -130,7 +124,7 @@ df.drop('LUR', axis=1, inplace = True)
 df.drop('BODYA', axis=1, inplace = True)
 
 
-print(df.tail(20))
+print(df.tail(1000))
 
 #result = df[df.Iupdown > 2]
 #print(result)
