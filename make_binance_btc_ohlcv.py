@@ -12,8 +12,17 @@ def return_dataframe(period='1d'):
 	import pandas as pd
 	import numpy as np
 	import pandas_ta as pta #use pip install pandas_ta
+	from dotenv import load_dotenv
+	import os
 
-	engine = create_engine("mysql+pymysql://admin:52GxbFuetNqvFn@crypto-db.cb84pseap2n8.us-east-1.rds.amazonaws.com:3306/crypto",)
+
+	load_dotenv()
+	host = os.getenv("HOST")
+	dbname = os.getenv("DBNAME")
+	username = os.getenv("USERNAME")
+	password = os.getenv("PASSWORD")
+	
+	engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)
 
 	conn = engine.connect()
 
