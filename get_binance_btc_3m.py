@@ -4,8 +4,17 @@ import time
 from sqlalchemy import create_engine
 import sqlalchemy
 import pymysql
-
-engine = create_engine("mysql+pymysql://admin:52GxbFuetNqvFn@crypto-db.cb84pseap2n8.us-east-1.rds.amazonaws.com:3306/crypto",)
+from dotenv import load_dotenv                                                                                                                                
+import os                                                                                                                                                     
+																			      
+																			      
+load_dotenv()                                                                                                                                                 
+host = os.getenv("HOST")                                                                                                                                      
+dbname = os.getenv("DBNAME")                                                                                                                                  
+username = os.getenv("USERNAME")                                                                                                                              
+password = os.getenv("PASSWORD")                                                                                                                              
+																			      
+engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)   
 
 client = Spot()
 

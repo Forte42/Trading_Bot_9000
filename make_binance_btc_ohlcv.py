@@ -1,3 +1,7 @@
+####################################################
+###          	OHLCV Data Importer             ####
+####################################################
+
 import fire
 
 
@@ -145,10 +149,9 @@ def return_dataframe(period='1d'):
 	df.drop('LUR', axis=1, inplace = True)
 	df.drop('BODYA', axis=1, inplace = True)
 
-
-	print(df.tail(20))
+	return df
+	#	print(df.tail(20))
 
 if __name__ == '__main__':
 
 	fire.Fire(return_dataframe)
-
