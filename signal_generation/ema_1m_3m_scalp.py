@@ -1,30 +1,34 @@
-import make_binance_btc_ohlcv
-import pandas as pd
-import pandas_ta as ta
-import numpy as np
-import sqlalchemy
-import pymysql
-from dotenv import load_dotenv
-import os
-import time
-from sqlalchemy import create_engine  
+def scalp():
+	import make_binance_btc_ohlcv
+	import pandas as pd
+	import pandas_ta as ta
+	import numpy as np
+	import sqlalchemy
+	import pymysql
+	from dotenv import load_dotenv
+	import os
+	import time
+	from sqlalchemy import create_engine  
+	import sys
+
+	sys.path.append('/home/ubuntu/Trading_Bot_9000/data_transformation/')
 
 
-load_dotenv()
+	load_dotenv()
 
-host = os.getenv("HOST")                                                                                                                                      
-dbname = os.getenv("DBNAME")                                                                                                                                  
-username = os.getenv("USERNAME")                                                                                                                              
-password = os.getenv("PASSWORD")     
+	host = os.getenv("HOST")                                                                                                                                      
+	dbname = os.getenv("DBNAME")                                                                                                                                  
+	username = os.getenv("USERNAME")                                                                                                                              
+	password = os.getenv("PASSWORD")     
 
-engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)  
+	engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)  
 
-conn = engine.connect()     
+	conn = engine.connect()     
 
-last_signal_3m = 9
-last_signal_1m = 9
-
-while True:
+	signal_df = pd.read_sql(f"SELECT * FROM signals", conn)
+	signal_df.sort_values('timestamp')
+	last_signal_1m = signal_df['ema_scalp_1m'].iloc[-1]
+	last_signal_3m = signal_df['ema_scalp_3m'].iloc[-1]
 
 	df = make_binance_btc_ohlcv.return_dataframe('1m')
 
@@ -56,7 +60,7 @@ while True:
 	df['EMAsignal'] = np.select(conditions, choices, default=0)
 
 	TotSignal = [0] * len(df)
-	
+
 	for row in range(0, len(df)):
 		
 		TotSignal[row] = 0
@@ -70,9 +74,9 @@ while True:
 	print(df["TotSignal"].value_counts())
 
 	print (df.tail())
-
+	timestamp = df['Timestamp'].max()
 	signal_1m = df['TotSignal'].iloc[-1]
-
+	#quit()
 	#####################################################################################################################
 
 	df = make_binance_btc_ohlcv.return_dataframe('3m')
@@ -114,14 +118,16 @@ while True:
 	df['TotSignal']=TotSignal
 
 	signal_3m = df['TotSignal'].iloc[-1]
-	timestamp = df['Timestamp'].iloc[-1]
-	
+
 	if (signal_1m != last_signal_1m) or (signal_3m != last_signal_3m):
+		print(timestamp)
+		print(f'INSERT INTO signals (timestamp, price, ema_scalp_1m, ema_scalp_3m) VALUES ({timestamp},{close}, {signal_1m}, {signal_3m})')
 
 		rs = conn.execute(f'INSERT INTO signals (timestamp, price, ema_scalp_1m, ema_scalp_3m) VALUES ({timestamp},{close}, {signal_1m}, {signal_3m})')
+		
 		last_signal_3m = signal_3m
 		last_signal_1m = signal_1m
 
-	time.sleep(.1)
+	print(timestamp)
 
-	
+

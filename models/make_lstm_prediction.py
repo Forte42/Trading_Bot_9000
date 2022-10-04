@@ -75,20 +75,22 @@ for i in range(60, len(test_data)):
 x_test = np.array(x_test)
 x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
-model = keras.Sequential()
-model.add(layers.LSTM(100, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-model.add(layers.LSTM(100, return_sequences=False))
-model.add(layers.Dense(25))
-model.add(layers.Dense(1))
-model.summary()
+#model = keras.Sequential()
+#model.add(layers.LSTM(100, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+#model.add(layers.LSTM(100, return_sequences=False))
+#model.add(layers.Dense(25))
+#model.add(layers.Dense(1))
+#model.summary()
 
-model.compile(optimizer='adam', loss='mean_squared_error')
-model.fit(x_train, y_train, batch_size= 1, epochs=30)
-model.save('my_model.h5')
+#model.compile(optimizer='adam', loss='mean_squared_error')
+#model.fit(x_train, y_train, batch_size= 1, epochs=30)
+#model.save('my_model.h5')
 model = load_model('my_model.h5')
 
 predictions = model.predict(x_test)
 predictions = scaler.inverse_transform(predictions)
 rmse = np.sqrt(np.mean(predictions - y_test)**2)
+prediction_30m = predictions[-1]
+print(prediction_30m)
+#rint(rmse)
 
-print(rmse)
