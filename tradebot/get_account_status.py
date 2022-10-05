@@ -172,40 +172,7 @@ password = os.getenv("PASSWORD")
 engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)               
 conn = engine.connect()  
 
-df = pd.read_sql(f"SELECT ema_scalp_1m FROM signals order by tIMESTAMP desc LIMIT 1", conn) 
-signal_1m = df['ema_scalp_1m'].iloc[-1].astype(int)
-print(signal_1m)
-df2 = pd.read_sql(f"SELECT ema_scalp_3m FROM signals ORDER BY Timestamp DESC LIMIT 1", conn)
-signal_3m = df2['ema_scalp_3m'].iloc[-1].astype(int)
-print(signal_3m)
-df3 = pd.read_sql(f"SELECT timestamp, value FROM lstm_3m_signal ORDER BY timestamp DESC LIMIT 1", conn)
-lstm_prediction = df3['value'].iloc[-1].astype(float)
-print(lstm_prediction)
 
-df4 = make_binance_btc_ohlcv.return_dataframe('3m')
-atr = df4['ATR'].iloc[-1].astype(float)
-print(atr) 
-
-df5 = pd.read_sql('select * from binance_btc_trades order by id desc limit 1;', conn)
-
-last_btc_trade = df5['price'].iloc[-1]
-last_btc_trade = float(last_btc_trade)
-print(last_btc_trade)
-
-stop_price_buy = last_btc_trade - atr
-take_profit_buy = last_btc_trade + (atr*2)
-stop_price_sell = last_btc_trade + atr
-take_profit_sell = last_btc_trade - (atr*2)
-
-limit_buy_price = last_btc_trade + (last_btc_trade * .1)
-limit_sell_price = last_btc_trade - (last_btc_trade * .1)
-
-
-positions = GetPositions()
-# First set the initial end_time for the orders
-# Set to the current time so we fetch all orders up until now
-# There's a limit to the number of orders received, but by selecting
-# direction='desc' the API will fetch orders from this date BACKWARDS
 end_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 # Create an empty list to store our full order list
@@ -234,35 +201,9 @@ while True:
     order_df = pd.DataFrame([order._raw for order in order_list])
     break
 
-print(order_df[['filled_qty', 'filled_avg_price']])
-
-#api.submit_order(
-#    symbol='BTC/USD',
-#    qty=.1,
-#    side='buy',
-#    type='market',
-#    time_in_force='gtc',
-#    order_class='simple')
-#    #stop_loss={'stop_price': last_btc_trade * 0.95,
-#    #           'limit_price':  last_btc_trade * 0.94},
-#    #ta:e_profit={'limit_price': last_btc_trade * 1.05})
+df.to_sql('alpaca_order_list', conn=engine)
 
 quit()  
-
-if positions == 'None':
-	
-	if (signal_1m == 2) & (lstm_prediction > last_btc_trade): 
-
-		StopLimitProfitBuy('BTC/USD', .1, limit_buy_price, stop_price_buy, take_profit_buy)
-
-	if (signal_1m == 1) & (lstm_prediction < last_btc_trade):
-
-		StopLimitProfitSell('BTC/USD', .1, limit_sell_price, stop_price_sell, take_profit_sell)
-
-	else:
-
-		pass
-
 
 	
 

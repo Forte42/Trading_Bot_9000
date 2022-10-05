@@ -6,7 +6,7 @@ def main(period):
 
 	import pandas as pd
 	df = return_dataframe(period)
-	print(df)
+	print(df.tail(30))
 
 def return_dataframe(period):
 	
@@ -78,7 +78,7 @@ def return_dataframe(period):
 	df['RSI'] = pta.rsi(df['Close'], length = 14).astype(float).round(2) #uses pandas-ta rsi function.  use pip install pandas_ta.
 	df['MACD'] = (talib.EMA(df['Close'], 13))-(talib.EMA(df['Close'], 26)).astype(float).round(2).astype(float).round(2) #comment out this line to run without talib dependency
 	df['VWAP'] = (np.cumsum(df.Volume * df.Close) / np.cumsum(df.Volume)).astype(float).round(2).astype(float).round(2)
-
+	df['ATR'] = pta.atr(df.High, df.Low, df.Close, length=5) 
 
 	# Candlestick Components
 	# these are used to describe individual candlesticks

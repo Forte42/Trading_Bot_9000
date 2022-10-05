@@ -84,8 +84,8 @@ model.summary()
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 model.fit(x_train, y_train, batch_size= 1, epochs=30)
-model.save('my_model.h5')
-model = load_model('my_model.h5')
+#model.save('my_model.h5')
+#model = load_model('my_model.h5')
 
 predictions = model.predict(x_test)
 predictions = scaler.inverse_transform(predictions)
