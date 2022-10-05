@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 import numpy as np
 from dotenv import load_dotenv
@@ -35,15 +36,16 @@ api = tradeapi.REST(
     api_version='v2'
 )
 
-# symbol='ETH/USD'
-# qty = 1
-# side='buy'
-# limit_price= 1000.00
-# stop_price=999.90
-# take_profit= 2000.00
+host = os.getenv("HOST")
+dbname = os.getenv("DBNAME")
+username = os.getenv("USERNAME")
+password = os.getenv("PASSWORD")
 
-# Stop Limit Order Take Profit: You have a price you want to buy,a stop and a take profit price, 
-# to prevent too much loss and capture your gains
+engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)
+
+conn = engine.connect()
+
+
 def StopLimitProfitBuy(symbol, qty, limit_price, stop_price, take_profit):
     stop_limit_profit_order_data = StopLimitProfitOrderRequest(
         symbol=symbol, 
@@ -172,41 +174,70 @@ password = os.getenv("PASSWORD")
 engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)               
 conn = engine.connect()  
 
-
-end_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-
-# Create an empty list to store our full order list
-order_list = []
-
-# Set the 'chunk size' to the 500 max
-CHUNK_SIZE = 500
-
 while True:
-  # Get the max chunk
-  order_chunk = api.list_orders(status='all', 
-                                nested='False', 
-                                direction='desc', 
-                                until=end_time,
-                                limit=CHUNK_SIZE)
-  
-  if order_chunk:
-    # Have orders so add to list
-    order_list.extend(order_chunk)
-    # Set end_time for next chunk to earliest fetched order
-    end_time = order_chunk[-1].submitted_at.isoformat()
 
-  else:
-    # No more orders. Make a dataframe of entire list of orders
-    # Then exit
-    order_df = pd.DataFrame([order._raw for order in order_list])
-    break
+	end_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
-df.to_sql('alpaca_order_list', conn=engine)
+	# Create an empty list to store our full order list
+	order_list = []
 
-quit()  
+	# Set the 'chunk size' to the 500 max
+	CHUNK_SIZE = 500
 
-	
+	while True:
+	  # Get the max chunk
+	  order_chunk = api.list_orders(status='all', 
+					nested='False', 
+					direction='desc', 
+					until=end_time,
+					limit=CHUNK_SIZE)
+	  
+	  if order_chunk:
+	    # Have orders so add to list
+	    order_list.extend(order_chunk)
+	    # Set end_time for next chunk to earliest fetched order
+	    end_time = order_chunk[-1].submitted_at.isoformat()
 
-			
+	  else:
+	    # No more orders. Make a dataframe of entire list of orders
+	    # Then exit
+	    order_df = pd.DataFrame([order._raw for order in order_list])
+	    break
 
- 
+	order_df['qty'] = order_df['qty'].astype(float)
+	order_df['limit_price'] = order_df['limit_price'].astype(float)
+	order_df['stop_price'] = order_df['stop_price'].astype(float)
+	order_df['filled_qty'] = order_df['filled_qty'].astype(float)
+	order_df['id'] = order_df['id'].astype(str)
+	order_df['filled_avg_price'] = order_df['filled_avg_price'].astype(float)
+	order_df['created_at'] = pd.to_datetime(order_df['created_at'])
+	order_df['updated_at'] = pd.to_datetime(order_df['updated_at'])
+	order_df['submitted_at'] = pd.to_datetime(order_df['submitted_at'])
+	order_df['filled_at'] = pd.to_datetime(order_df['filled_at'])
+	order_df['expired_at'] = pd.to_datetime(order_df['expired_at'])
+	order_df['canceled_at'] = pd.to_datetime(order_df['canceled_at'])
+	order_df['failed_at'] = pd.to_datetime(order_df['failed_at'])
+	order_df['replaced_at'] = pd.to_datetime(order_df['expired_at'])
+
+
+	id_df = pd.read_sql('SELECT id FROM alpaca_order_list', conn)
+
+	duplicates = set(order_df.id).intersection(id_df.id)
+
+	print(duplicates)
+
+	for duplicate in duplicates:
+		order_df = order_df[order_df.id != duplicate] 
+
+	print(order_df)
+
+	order_df.to_sql('alpaca_order_list', con=engine, if_exists='append')
+
+
+	time.sleep(5)
+
+		
+
+				
+
+	 
