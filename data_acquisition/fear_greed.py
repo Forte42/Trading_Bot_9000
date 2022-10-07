@@ -1,5 +1,9 @@
 def get_fear_greed_daily_data():
-
+	
+	""" Gets the daily fear and greed indexdata and writes it to 'fear_greed' table in MySQL crypto DB """
+	
+	""" data url -->  https://api.alternative.me/fng/?limit=0  """
+	
 	import time
 	import pandas as pd
 	import numpy as np
@@ -62,8 +66,8 @@ def get_fear_greed_daily_data():
 	data_df['Change'] = data_df['value_classification'].ne(data_df['value_classification'].shift().bfill()).astype(int)
 
 	# convert the value_classifications to integers for use in machine learning models
-	classification_int = []
 
+	classification_int = []
 	for string in data_df['value_classification']:
 
 		if string == 'Extreme Fear':
@@ -83,6 +87,8 @@ def get_fear_greed_daily_data():
 
 	data_df['classification_int'] = classification_int	
 
+	# Attempt MySQL query to get last timestamp from fear_greed table
+
 	try:
 		last_timestamp = engine.execute("SELECT timestamp_temp FROM fear_greed ORDER BY timestamp_temp DESC LIMIT 1;")                                                 
 		last_timestamp = last_timestamp.fetchone()
@@ -90,14 +96,16 @@ def get_fear_greed_daily_data():
 		last_timestamp = int(last_timestamp[0])
 		print(last_timestamp) 
 
-	except:
+	except SQLAlchemyError as e:
+	
+		error = str(e.__dict__['orig'])
 		last_timestamp = 9999999999
 		print(last_timestamp)
+		return error
 
 	if last_timestamp != 9999999999:
 
 		data_df = data_df.dropna()
-		#data_df['timestamp_temp'] = int(data_df['timestamp_temp'])
 		data_df=data_df[data_df['timestamp_temp'] > last_timestamp]
 		data_df.to_sql(con=engine, name='fear_greed', if_exists='append',chunksize=100, index=True)
 

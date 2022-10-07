@@ -6,7 +6,7 @@ import sys
 sys.path.append('data_acquisition/')
 scheduler = BackgroundScheduler()
 
-import get_binance_data
+import get_binance_btc_0m
 import get_binance_btc_1m
 import get_binance_btc_3m
 import get_binance_btc_30m
@@ -18,7 +18,7 @@ sys.path.append('tradebot/')
 import get_alpaca_order_list
 
 
-scheduler.add_job(get_binance_data.get_binance_btc_0m_data, 'interval', seconds=.1)
+scheduler.add_job(get_binance_btc_0m.get_binance_btc_0m_data, 'interval', seconds=.1)
 scheduler.add_job(get_binance_btc_1m.get_binance_btc_1m_data, 'interval', seconds=1)
 scheduler.add_job(get_binance_btc_3m.get_binance_btc_3m_data, 'interval', seconds=1)
 scheduler.add_job(get_binance_btc_30m.get_binance_btc_30m_data, 'interval', seconds=10)

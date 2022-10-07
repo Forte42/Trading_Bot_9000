@@ -12,7 +12,7 @@ scheduler = BackgroundScheduler()
 import ema_1m_3m_scalp
 import make_lstm_prediction
 
-scheduler.add_job(ema_1m_3m_scalp.scalp, 'interval', seconds=.1)
+scheduler.add_job(ema_1m_3m_scalp.scalp, 'interval', seconds=.2)
 scheduler.add_job(make_lstm_prediction.make_prediction, 'interval', seconds=20)
 
 
