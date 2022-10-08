@@ -32,7 +32,7 @@ def scalp():
 	signal_df.sort_values('timestamp')
 	last_signal_1m = signal_df['ema_scalp_1m'].iloc[-1]
 	last_signal_3m = signal_df['ema_scalp_3m'].iloc[-1]
-	
+	print(last_signal_1m, last_signal_3m)	
 	######## Run 1  minute OHCLV signals #################################################################################
 
 	# Restructure dataframe with 1m data before running signal generator
@@ -84,7 +84,9 @@ def scalp():
 	print (df.tail())
 	timestamp = df['Timestamp'].max()
 	signal_1m = df['TotSignal'].iloc[-1] # Save 1m signal for conditional to decide whether to write to DB
-	
+	i = df.index.max()
+	close = df['Close'].iloc[i]
+			
 	######## Run 3 minute OHCLV signals #################################################################################
 
 	# Restructure dataframe with 3m data before running signal generator
@@ -136,10 +138,10 @@ def scalp():
 	# If current signal is != last signal, all current values are written into DB
 
 	signal_3m = df['TotSignal'].iloc[-1]
-
+	print(close)
+	
 	if (signal_1m != last_signal_1m) or (signal_3m != last_signal_3m):
 	
-		rint(timestamp)
 		print(f'INSERT INTO signals (timestamp, price, ema_scalp_1m, ema_scalp_3m) VALUES ({timestamp},{close}, {signal_1m}, {signal_3m})')
 
 		rs = conn.execute(f'INSERT INTO signals (timestamp, price, ema_scalp_1m, ema_scalp_3m) VALUES ({timestamp},{close}, {signal_1m}, {signal_3m})')
@@ -147,3 +149,4 @@ def scalp():
 	print(timestamp)
 	print('EMA 3m/1m ran successfully')
 	print('')
+	conn.close()

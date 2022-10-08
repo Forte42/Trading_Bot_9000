@@ -15,7 +15,7 @@ import fear_greed
 
 sys.path.append('tradebot/')
 
-import get_alpaca_order_list
+import get_binance_balances 
 
 
 scheduler.add_job(get_binance_btc_0m.get_binance_btc_0m_data, 'interval', seconds=.1)
@@ -25,9 +25,9 @@ scheduler.add_job(get_binance_btc_30m.get_binance_btc_30m_data, 'interval', seco
 scheduler.add_job(get_binance_btc_1d.get_binance_btc_1d_data, 'interval', seconds=40000)
 scheduler.add_job(fear_greed.get_fear_greed_daily_data, 'interval', seconds=40000)
 
-# Get order data and Alpaca account status
+# Get Binance account balances
 
-scheduler.add_job(get_alpaca_order_list.get_orders_from_alpaca, 'interval', seconds=1)
+scheduler.add_job(get_binance_balances.update_binance_account_balances, 'interval', seconds=1)
 
 
 

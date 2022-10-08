@@ -63,5 +63,4 @@ def get_binance_btc_0m_data():
 		df.to_sql(con=engine, name='binance_btc_0m', if_exists='append',chunksize=100, index=False)
 
 	print('success')
-
-
+	
