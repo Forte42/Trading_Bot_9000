@@ -2,45 +2,50 @@
 
 ## Problem Statement
 
-TO DO - Document the problem that we are experiencing:
+Trading cryptocurrencies can potentially be an extremely lucrative means of investment. It is a fairly new, disruptive investment vehicle and there are promises of great rewards.
 
-- Human emotions and errors negatively affect trading results
-- Humans cannot trade 24/7
-- Humans cannot detect every signal that points to a buying or selling opportunity
+However, with anything that is high reward, there are also great risks and several challenges due to the nature of cryptocurrency. One such challenge is that cryptocurrencies are traded around the clock globally and a signal human trader cannot stay awake all day trading. This results in missed buying and selling opportunities, as there may be events that affect the prices of certain assets or the entire market on the whole. Humans cannot detect every signal that points to a buying or selling opportunity. Finally, with any investing, human emotions comes into play. Since crypocurrencies are especially volatile, this can potentially result in erratic and impulsive decisions.
+
+Algorithimic trading and automated bots can eliminate some risks as well as overcoming challenges associated with trading cryptocurrencies. Machine Learning allows us to train models that can predict buying and selling opportunities. Automated trading bots can also trade 24 hours a day, 7 days a week. Finally, bots do not have emotions, so this eliminates any problems caused by human emotions.
 
 ---
 
 ## Solution Overview
 
-Algorithmic Trading and Trading BOTS
+For our project, we are implementing an automated bot that incorporates algorithmic trading to buy and sell cryptocurrencies. The automated bot has several features:
 
-- Machine Learning allows us to train models that can predict buying and selling opportunities
-- Automated trading bots can trade 24/7
-- Automated trading bots eliminate human emotion
+- Data Retrieval
+- Transformation and Modeling
+- Trading
 
-This provides more opportunities to make money.
+![alt text](/images/flowchart.png)
 
-This project was broken down into a few phases:
+### 1. Data Retrieval
 
-Importing Data
+Data is retrieved through Binance, one the largest cryptocurrency exchanges in the world. The data retrieval occurs through Binance's REST APIs and is stored into a MySQL database for additional processing. Data is retrieved at regular intervals throughout the day.
 
-- Binance
-- Alpaca
+### 2. Transformation and Modeling
 
-Exploration of Algorithmic Trading and Machine Learning
+**2.1. Long Short Term Memory (LSTM)**
 
-- Model-Fit-Predict Design Pattern
-- LSTM
-- Fear and Greed Index
-- Scalping Trading Strategies
+We are incorporating LSTM, a type of artificial neural network, to allow us to incorporate machine learning into our trading bot.
 
-Implementation of Automated Trading BOT
+**2.2. Bitcoin Fear-and-Greed Index**
 
-- Amazon Web Services
-- Scheduled Tasks
-  - Importing Data
-  - Training Model
-  - Executing Trades
+One of the features that will be used for the LSTM model is the Bitcoin Fear-and-Greed index, which is an index that takes into account the following factors:
+
+- Volatility
+- Market Volume
+- Social Media
+- Dominance
+- Trends
+
+**2.3. Scalping Trading Strategies**  
+Derick - TO DO
+
+### 3. Trading
+
+The trading bot executes a trading task that reads the MySQL database for buy and sell signals. The trading task will analyze the latest buy and sell signals and determine whether to execute a trade.
 
 ---
 
@@ -48,13 +53,12 @@ Implementation of Automated Trading BOT
 
 This example uses the following technologies:
 
-### Amazon Web Services
-
-TO DO - Document what this is for
-
 ### MySQL
 
-TO DO - Document what this is for
+MySQL is used to store the following:
+
+- Historical Bitcoin Trades
+- Buy and Sell Signals
 
 ### Machine Learning Technologies
 
@@ -66,12 +70,36 @@ TO DO - Document what this is for
 
 - **Jupyter** - Jupyter is a web-based interactive development environment for data science and analysis. Please see [Jupyter documentation](https://jupyter.org/) for more information.
 - **pandas** - pandas is a software library written for the Python programming language for data manipulation and analysis. Please see [pandas documentation](https://pandas.pydata.org/) for more information.
+- **numpy**
+- **pandas_ta**
 
 ---
 
 ## Installation
 
-TODO
+The project's dependencies are stored in `requirements.txt`. To install these dependencies, you can execute the following command:
+
+`pip install -r requirements.txt`
+
+Here is a list of the dependencies:
+All of the dependencies are listed below:
+
+```
+# reg_model.ipynb and up_or_down_model.ipynb requirements
+matplotlib==3.5.1
+numpy==1.21.5
+pandas==1.3.5
+python-dotenv==0.21.0
+requests==2.27.1
+scikit_learn==1.1.2
+tensorflow==2.10.0
+
+# non-machine-learning-strategies requirements
+Backtesting==0.3.3
+pandas_ta==0.3.14b0
+plotly==5.6.0
+yfinance==0.1.77
+```
 
 ---
 
