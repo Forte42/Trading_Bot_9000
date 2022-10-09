@@ -2,8 +2,35 @@
 
 ## Description 
 
-Ever want to make a trading bot that'll work for you so you can retire and live the good life? So did we!
+This software is a crypto trading bot designed to work with Binance.US.  AS currently configured it runs on the Binance.US test API (?paper trading). The bot can play both the long and short side of the crypto market, but due to limitations on the Binance test API, only the long side is currently functional.  For full trading with this code, the actual Binance API is available to anyone with a funded Binance.US account. 
 
+
+## Dependencies
+
+MySQL (latest)
+Python 3.8 or higher
+Ubuntu Server 20.04 - Not required but as currently configured
+
+Python Package Dependencies
+
+Pandas
+Numpy
+Dotenv
+Pandas TA
+TALIB (comment lines X AND Y from make_binance_btc_ohlcv.py to skip this dependency)
+Binance-Connector
+
+## Installation
+
+In order to install Tradingbot9000, you will need read/write credentials to a MySQL database, and root access to a Python 3.8 environment.  You will also needBinance API or Binance Test API keys.
+
+The bot is broken down into 3 main areas of code.  
+
+1)Data Acquistion - 
+
+2)Signal Generation - 
+
+3)Trading Code - 
 
 
 ## MVP User Stories
