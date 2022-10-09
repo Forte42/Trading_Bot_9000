@@ -121,7 +121,7 @@ This application was authored by:
 
 - David Lampach
 - Derick DeCesare
-- Garrett Hernandez
+- Garrett Hernandez (gtkhhz@gmail.com)
 - Kristen Potter
 - Quinn Wong (quinn.wong@gmail.com)
 - Ryan Mangum
