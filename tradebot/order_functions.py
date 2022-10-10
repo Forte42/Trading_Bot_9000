@@ -34,6 +34,7 @@ def market_sell(symbol, qty):
 	"quantity": qty
     }
     
+	response = 0
 	try:
 
 		response = client.new_order(**params)
@@ -104,7 +105,7 @@ def market_buy(symbol, qty):
 	return response
 
 
-def bracket_market_buy(symbol, qty, stop_loss, profit_target):
+def bracket_market_buy(symbol, qty, stop_loss, profit_target, strategy='none specified'):
 
 	"""This function initiates a market buy order for BTCUSTD on binance and waits until stop loss and profit targets are reached to initiate sell order"""
 	
@@ -138,12 +139,9 @@ def bracket_market_buy(symbol, qty, stop_loss, profit_target):
 
 	# Create sqlalchemy MySQL Connection                                                                                                                                                                  
 	engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)
-
+	conn = engine.connect()
 
 	order = order_functions.market_buy(symbol, qty)
-	qty = float(order['executedQty'] )
-	cost_basis = float(order['cummulativeQuoteQty']) / qty # Calculates the price of 1 BTC paid in trade
-	print(cost_basis)
 
 	# Wait for order to be completely filled
 
@@ -154,6 +152,26 @@ def bracket_market_buy(symbol, qty, stop_loss, profit_target):
 	# Once order is filled use response data to calculate stop loss and profit target
 
 	if order['status'] == 'FILLED':
+		
+		qty = float(order['executedQty'] )
+		cost_basis = float(order['cummulativeQuoteQty']) / qty # Calculates the price of 1 BTC paid in trade
+		buy_link = order['orderId']
+		print(cost_basis)
+
+			
+		order_id = order['orderId']
+		symbol = order['symbol']
+		transact_time = order['transactTime']
+		price = order['price']
+		ordered_qty = order['origQty']
+		executed_qty = order['executedQty']
+		cost_basis = order['cummulativeQuoteQty']
+		status = order['status']
+		time_in_force = order['timeInForce']
+		order_type = order['type']
+		order_side = order['side']
+		
+		rs = conn.execute(f'INSERT INTO buy_orders (Order_id, Symbol, Transact_Time, Price, Ordered_Qty, Executed_Qty, Cost_Basis, Status, Time_In_Force, Order_Type, Order_Side, Strategy) VALUES ({order_id},"{symbol}", {transact_time}, {price}, {ordered_qty}, {executed_qty}, {cost_basis},"{status}","{time_in_force}", "{order_type}", "{order_side}", "{strategy}")')
 
 		try:
 			
@@ -190,11 +208,41 @@ def bracket_market_buy(symbol, qty, stop_loss, profit_target):
 
 			if last_trade_id > profit_target:
 						
-				order_functions.market_sell('BTCUSDT', executed_qty)
-				i=0
+				order = order_functions.market_sell('BTCUSDT', qty)
+				order_id = order['orderId']
+				symbol = order['symbol']
+				transact_time = order['transactTime']
+				price = order['price']
+				ordered_qty = order['origQty']
+				executed_qty = order['executedQty']
+				cost_basis = order['cummulativeQuoteQty']
+				status = order['status']
+				time_in_force = order['timeInForce']
+				order_type = order['type']
+				order_side = order['side']
+
+
+				rs = conn.execute(f'INSERT INTO sell_orders (Order_id, Symbol, Transact_Time, Price, Ordered_Qty, Executed_Qty, Cost_Basis, Status, Time_In_Force, Order_Type, Order_Side, Linked_Order, Strategy) VALUES ({order_id},"{symbol}", {transact_time}, {price}, {ordered_qty}, {executed_qty}, {cost_basis},"{status}","{time_in_force}", "{order_type}", "{order_side}",{buy_link}, "{strategy}")')
+				rs = conn.execute(f'UPDATE buy_orders SET Linked_Order = {order_id} WHERE Order_id = "{order_id}";') 
+			i=0
 			
 			if last_trade_id < stop_loss:
 				
-				order_functions.market_sell('BTCUSDT', executed_qty)
+				order = order_functions.market_sell('BTCUSDT', qty)
+				order_id = order['orderId']
+				symbol = order['symbol']
+				transact_time = order['transactTime']
+				price = order['price']
+				ordered_qty = order['origQty']
+				executed_qty = order['executedQty']
+				cost_basis = order['cummulativeQuoteQty']
+				status = order['status']
+				time_in_force = order['timeInForce']
+				order_type = order['type']
+				order_side = order['side']
+
+
+				rs = conn.execute(f'INSERT INTO sell_orders (Order_id, Symbol, Transact_Time, Price, Ordered_Qty, Executed_Qty, Cost_Basis, Status, Time_In_Force, Order_Type, Order_Side, Linked_Order, Strategy) VALUES ({order_id},"{symbol}", {transact_time}, {price}, {ordered_qty}, {executed_qty}, {cost_basis},"{status}","{time_in_force}", "{order_type}", "{order_side}",{buy_link}, "{strategy}")')
+				rs = conn.execute(f'UPDATE buy_orders SET Linked_Order = {order_id} WHERE Order_id = "{buy_link}";') 
 				i=0
 

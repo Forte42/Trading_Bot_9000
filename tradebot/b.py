@@ -10,7 +10,7 @@ import time
 from sqlalchemy.exc import SQLAlchemyError
 import click # Used for clearing output display
 import order_functions
-
+from binance.enums import *
 
 # Load environmental variables
 
@@ -26,6 +26,17 @@ password = os.getenv("PASSWORD")
 
 client = Spot(key=api_key, secret=api_secret, base_url='https://testnet.binance.vision')
 
+order = client.create_margin_order(
+	symbol='BTCUSDT',
+	side=SIDE_SELL,
+	type=ORDER_TYPE_LIMIT,
+	timeInForce=TIME_IN_FORCE_GTC,
+	quantity=.1,
+	price='20,000')
+	
+print(test)
+
+quit()
 # Create sqlalchemy MySQL Connection                                                                                                                                                                  
 engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)
 

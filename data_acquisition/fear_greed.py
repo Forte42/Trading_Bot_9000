@@ -17,6 +17,7 @@ def get_fear_greed_daily_data():
 	import os
 	from dotenv import load_dotenv
 	from sqlalchemy import create_engine
+	from sqlalchemy.exc import SQLAlchemyError	
 
 	load_dotenv()
 
@@ -85,10 +86,54 @@ def get_fear_greed_daily_data():
 		elif string == 'Extreme Greed':
 			classification_int.append(int(4))
 
-	data_df['classification_int'] = classification_int	
+	data_df['Encoded_Class'] = classification_int	
 
+
+	# create the entry/exit column
+
+
+	data_df['Entry_Exit'] = 0
+
+	# if current row value for 'classification_int' is greater than previous row value for 'classification_int' = BUY
+	data_df.loc[(data_df['Encoded_Class'] > data_df['Encoded_Class'].shift()), 'Entry_Exit'] = int(1)
+
+	# if current row value for 'classification_int' is smaller than previous row value for 'classification_int' = SELL
+	data_df.loc[(data_df['Encoded_Class'] < data_df['Encoded_Class'].shift()), 'Entry_Exit'] = int(-1)
+
+	# if current row value for 'classification_int' equals previous row value for 'classification_int' = HOLD
+	data_df.loc[(data_df['Encoded_Class'] == data_df['Encoded_Class'].shift()), 'Entry_Exit'] = int(0)
+	
+	
+	coin_size=1
+	wallet = 0
+	coins = 0
+	data_df['Wallet'] = 0
+	data_df['Number_Coins_To_Transact'] =  0
+	i = 0
+	
+	for idx, row in data_df.iterrows():
+
+		if row['Entry_Exit'] == 1:
+			wallet += coin_size
+			coins = coin_size # Number of Coins to Buy/Sell
+			cost_of_trade = data_df.iloc[i, 2] * coin_size # Cost of position bought on a particular day
+
+		elif row['Entry_Exit'] == -1:
+			coins = wallet # Number of Coins to Buy/Sell
+			cost_of_trade = -(data_df.iloc[i, 2] * wallet) # close * Wallet, Cost of position sold on a particular day
+			wallet += -wallet
+
+		elif row['Entry_Exit'] == 0:
+			coins = 0
+			cost_of_trade = 0
+		print(data_df.columns)
+		data_df.iloc[i, 8] = wallet
+		data_df.iloc[i, 9]= coins
+
+		i+=1
 	# Attempt MySQL query to get last timestamp from fear_greed table
 
+	
 	try:
 		last_timestamp = engine.execute("SELECT timestamp_temp FROM fear_greed ORDER BY timestamp_temp DESC LIMIT 1;")                                                 
 		last_timestamp = last_timestamp.fetchone()
@@ -101,7 +146,6 @@ def get_fear_greed_daily_data():
 		error = str(e.__dict__['orig'])
 		last_timestamp = 9999999999
 		print(last_timestamp)
-		return error
 
 	if last_timestamp != 9999999999:
 
@@ -111,7 +155,7 @@ def get_fear_greed_daily_data():
 
 	else:
 
-
+		print(data_df)
 		data_df.to_sql(con=engine, name='fear_greed', if_exists='append',chunksize=100, index=True)
 
 	time.sleep(120)
