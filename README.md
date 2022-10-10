@@ -89,19 +89,23 @@ Here is a list of the dependencies:
 All of the dependencies are listed below:
 
 ```
-# reg_model.ipynb and up_or_down_model.ipynb requirements
+apscheduler==3.9.1
+click==8.0.4
+fire==0.4.0
+hvplot==0.8.0
+imbalanced_learn==0.9.1
+imblearn==0.0
+keras==2.10.0
 matplotlib==3.5.1
 numpy==1.21.5
-pandas==1.3.5
+pandas==1.4.2
+pandas_ta==0.3.14b0
+pymysql==1.0.2
 python-dotenv==0.21.0
 requests==2.27.1
 scikit_learn==1.1.2
+SQLAlchemy==1.4.32
 tensorflow==2.10.0
-
-# non-machine-learning-strategies requirements
-Backtesting==0.3.3
-pandas_ta==0.3.14b0
-plotly==5.6.0
 yfinance==0.1.77
 ```
 
