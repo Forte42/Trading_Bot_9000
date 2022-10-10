@@ -107,14 +107,57 @@ yfinance==0.1.77
 
 ## Usage
 
-TODO
+### Running the Code
 
-### Launching the Application
+To run the code, perform the following steps:
 
-To launch the Application, perform the following steps:
-
-- TBD
-
+1. Download all files
+2. Use the files in the main folder:
+  - get_data.py: scheduler for retrieving data
+  - get_signals.py: scheduler for retrieving signal information
+  - reg_model.ipynb: Regression LSTM model with yahoo finance data jupyter file
+  - run_signal.sh: script used to start the signal generator
+  - tradebot.py: EMA trading signal scheduler
+3. Use the py files in the tradebot folder:
+  - b.py: creates sqlalchemy MySQL Connection, puts in an order and waits for order to be filled before adding on a stop and a limit.
+  - ema_trade_bot.py: trades off of ema signals
+  - get_binance_balances.py: Queries Binance API for account balances and write them to MySQL table 'binance_account_balances'
+  - make_binance_btc_ohlcv.py: Functions to return a DataFrame from binance
+  - order_functions.py: Functions to generate trade orders from binance
+  - track_order.py: Imports
+  - trade_fear_greed.py: If statements that will execute trades based on Fear and Green Index machine learning
+4. Use the py files in the signal_generation folder:
+  - btc_ema_scalp_0m.py: EMA signal generation for BTC trade data
+  - ema_1m_3m_scalp.py: EMA signal generation for BTC on a 1m and 3m timeframe
+  - fear_greed_signal.py: Fear and Greed machine learning model
+  - make_binance_btc_ohlcv.py: making binance btc data into ohlcv
+5. Use the py files in the models folder:
+  - make_lstm_prediction.py: Function that trains and makes a prediction given a DataFrame
+  - my_model.h5: Output of make_lstm_prediction.py file
+  - build_lstm_model.py: LSTM model prediction code
+  - model_storage Folder: Stores models
+6. The files in the images folder: show flow chart of proccesses
+7. Use the py files in the data_transformation folder:
+  - btc_volume_analysis.py: analysis volume from binance BTC data
+  - make_binance_btc_ohlcv.py: Function that turns BTC binance data into OHLCV
+8. Use the py files in the data_explorations folder:
+  - In the examples/binance Folder:
+    - binance_client.py: Functions that generate buy and sell orders from binance
+  - In the non-machine-learning-strategies Folder:
+    - BTCUSD_Candlestick_15_M_ASK_05.08.2019-29.04.2022.csv: Candlestick data from 05.08.2019-29.04.2022
+    - EMA_Scalping_BTC.ipynb: EMA scalping strategy in jupyter file 
+    - VWAP_BTC.ipynb: VWAP strategy in jupyter file
+  - reg_model.ipynb: Regression LSTM model with yahoo finance data
+  - up_or_down_model.ipynb: Regression LSTM model with yahoo finance data and Fear and Greed Index
+9. Use the py files in the data_acquisition folder:
+  - fear_greed.py: Import fear and greed data
+  - get_binance_btc_0m.py: Import binance trade data
+  - get_binance_btc_1d.py: Import binance 1 day data
+  - get_binance_btc_1m.py: Import binance 1 minute data
+  - get_binance_btc_30m.py: Import binance 30 minute data
+  - get_binance_btc_3m.py: Import binance 3 minute data
+  - get_binance_ohlcv_bar.py: Import binance ohlcv bar data
+  
 ---
 
 ## Contributors
