@@ -28,7 +28,9 @@ Data is retrieved through Binance, one the largest cryptocurrency exchanges in t
 
 **2.1. Long Short Term Memory (LSTM)**
 
-We are incorporating LSTM, a type of artificial neural network, to allow us to incorporate machine learning into our trading bot.
+We are incorporating LSTM, a type of recurrent neural network, to allow us to incorporate machine learning into our trading bot. Currently, the bot uses an LSTM model shifted 24 hours into the future. We constantly ask this bot to make a prediction about what the candle 24 hours from now will look like and use it as a trading signal. 
+
+We are also working on a classification model, to predict whether the next candle will be green or red. This model incorporates OHLCV and fear-and-greed data. This model is included in the repo although it is not consistent enough to be used in our tradebot yet.
 
 **2.2. Bitcoin Fear-and-Greed Index**
 
