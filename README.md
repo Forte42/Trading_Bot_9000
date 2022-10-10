@@ -125,7 +125,7 @@ To run the code, perform the following steps:
   - make_binance_btc_ohlcv.py: Functions to return a DataFrame from binance
   - order_functions.py: Functions to generate trade orders from binance
   - track_order.py: Imports
-  - trade_fear_greed.py: If statements that will execute trades based on Fear and Green Index machine learning
+  - trade_fear_greed.py: If statements that will execute trades based on Fear and Greed Index machine learning
 4. Use the py files in the signal_generation folder:
   - btc_ema_scalp_0m.py: EMA signal generation for BTC trade data
   - ema_1m_3m_scalp.py: EMA signal generation for BTC on a 1m and 3m timeframe
@@ -136,7 +136,7 @@ To run the code, perform the following steps:
   - my_model.h5: Output of make_lstm_prediction.py file
   - build_lstm_model.py: LSTM model prediction code
   - model_storage Folder: Stores models
-6. The files in the images folder: show flow chart of proccesses
+6. The files in the images folder: show flowchart of processes
 7. Use the py files in the data_transformation folder:
   - btc_volume_analysis.py: analysis volume from binance BTC data
   - make_binance_btc_ohlcv.py: Function that turns BTC binance data into OHLCV
@@ -157,7 +157,12 @@ To run the code, perform the following steps:
   - get_binance_btc_30m.py: Import binance 30 minute data
   - get_binance_btc_3m.py: Import binance 3 minute data
   - get_binance_ohlcv_bar.py: Import binance ohlcv bar data
-  
+
+To start the bot run the following commands:
+python3 get_data.py
+sh run_signal.sh
+python3 tradebot.py
+
 ---
 
 ## Contributors
