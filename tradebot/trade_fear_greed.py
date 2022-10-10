@@ -31,8 +31,7 @@ entry_exit = df['Entry_Exit'].iloc[-1]
 coins_to_transact = df['Number_Coins_To_Transact'].iloc[-1]
 coins_to_transact = (float(coins_to_transact))/10
 strategy = 'fear greed signal'
-coins_to_transact =3.4 
-entry_exit = -1
+
 print(entry_exit)
 print(coins_to_transact)
 
