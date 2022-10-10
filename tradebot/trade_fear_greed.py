@@ -1,3 +1,6 @@
+# This file runs once a day and updates the fear_greed coin holdings depending on new results.
+
+
 import pandas as pd
 import numpy as np
 from dotenv import load_dotenv
