@@ -41,7 +41,9 @@ One of the features that will be used for the LSTM model is the Bitcoin Fear-and
 - Trends
 
 **2.3. Scalping Trading Strategies**  
-Derick - TO DO
+For our scalping model we use three EMAs (exponential moving averages) to determine whether our asset is in an uptrend or a downtrend. We then moniter the open and close of our fifteen-minute candles to determine once it crosses the shortest EMA. If it crosses back over the EMA in the next candle then we will initiate our trade. We utilize a strict exit strategy so can minimize our losses. Setting our take profit limit to double our stop loss allows the strategy to be profitable even when winning less than 50% of the trades.
+
+We also have a scalping model that uses an EMA as well VWAP to determine trend. It then follows a similar strategy outlined above.
 
 ### 3. Trading
 
@@ -120,7 +122,7 @@ To launch the Application, perform the following steps:
 This application was authored by:
 
 - David Lampach
-- Derick DeCesare
+- Derick DeCesare (derick.decesare@gmai.com)
 - Garrett Hernandez (gtkhhz@gmail.com)
 - Kristen Potter
 - Quinn Wong (quinn.wong@gmail.com)
