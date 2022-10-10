@@ -22,7 +22,7 @@ For our project, we are implementing an automated bot that incorporates algorith
 
 ### 1. Data Retrieval
 
-Data is retrieved through Binance, one the largest cryptocurrency exchanges in the world. The data retrieval occurs through Binance's REST APIs and is stored into a MySQL database for additional processing. Data is retrieved at regular intervals throughout the day.
+Data is retrieved through Binance, one the largest cryptocurrency exchanges in the world. The data retrieval occurs through Binance's REST APIs and is stored into a MySQL database for additional processing. Data is retrieved at regular intervals throughout the day.  Current set data retrieval intervals are (all trades, 1m OHLCV, 3m OHLCV, 30m OHLCV, 1d OHLCV)
 
 ### 2. Transformation and Modeling
 
@@ -107,7 +107,32 @@ scikit_learn==1.1.2
 SQLAlchemy==1.4.32
 tensorflow==2.10.0
 yfinance==0.1.77
+talib
 ```
+For linux users having trouble installing talib use the following script:
+
+sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+sudo apt install wget -y
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt-get install build-essential -y
+sudo apt install python3.10-dev -y
+sudo apt-get install python3-dev -y
+
+wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+tar -xzf ta-lib-0.4.0-src.tar.gz
+cd ta-lib
+
+wget 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' -O './config.guess'
+wget 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD' -O './config.sub'
+./configure --prefix=/usr
+make
+sudo make install
+
+sudo rm -rf ta-lib
+sudo rm -rf ta-lib-0.4.0-src.tar.gz
+
+pip install ta-lib
+
 
 ---
 
@@ -120,11 +145,12 @@ To run the code, perform the following steps:
 1. Download all files
 2. Use the files in the main folder:
   - get_data.py: scheduler for retrieving data
-  - get_signals.py: scheduler for retrieving signal information
-  - reg_model.ipynb: Regression LSTM model with yahoo finance data jupyter file
+  - get_signals.py: scheduler for retrieving signal information (runs via run_signal.sh)
   - run_signal.sh: script used to start the signal generator
   - tradebot.py: EMA trading signal scheduler
-3. Use the py files in the tradebot folder:
+** get_data.py, run_signal.sh, and tradebot.py are the only files needed to start the bot
+
+3. The bot uses the py files in the tradebot folder:
   - b.py: creates sqlalchemy MySQL Connection, puts in an order and waits for order to be filled before adding on a stop and a limit.
   - ema_trade_bot.py: trades off of ema signals
   - get_binance_balances.py: Queries Binance API for account balances and write them to MySQL table 'binance_account_balances'
@@ -132,21 +158,21 @@ To run the code, perform the following steps:
   - order_functions.py: Functions to generate trade orders from binance
   - track_order.py: Imports
   - trade_fear_greed.py: If statements that will execute trades based on Fear and Greed Index machine learning
-4. Use the py files in the signal_generation folder:
+4. The bot uses the py files in the signal_generation folder:
   - btc_ema_scalp_0m.py: EMA signal generation for BTC trade data
   - ema_1m_3m_scalp.py: EMA signal generation for BTC on a 1m and 3m timeframe
   - fear_greed_signal.py: Fear and Greed machine learning model
   - make_binance_btc_ohlcv.py: making binance btc data into ohlcv
-5. Use the py files in the models folder:
+5. The bot uses the py files in the models folder:
   - make_lstm_prediction.py: Function that trains and makes a prediction given a DataFrame
   - my_model.h5: Output of make_lstm_prediction.py file
   - build_lstm_model.py: LSTM model prediction code
   - model_storage Folder: Stores models
 6. The files in the images folder: show flowchart of processes
-7. Use the py files in the data_transformation folder:
+7. The bot uses the py files in the data_transformation folder:
   - btc_volume_analysis.py: analysis volume from binance BTC data
   - make_binance_btc_ohlcv.py: Function that turns BTC binance data into OHLCV
-8. Use the py files in the data_explorations folder:
+8. The py files in the data_explorations folder are exploratory:
   - In the examples/binance Folder:
     - binance_client.py: Functions that generate buy and sell orders from binance
   - In the non-machine-learning-strategies Folder:
@@ -155,7 +181,7 @@ To run the code, perform the following steps:
     - VWAP_BTC.ipynb: VWAP strategy in jupyter file
   - reg_model.ipynb: Regression LSTM model with yahoo finance data
   - up_or_down_model.ipynb: Regression LSTM model with yahoo finance data and Fear and Greed Index
-9. Use the py files in the data_acquisition folder:
+9. The bot uses the py files in the data_acquisition folder:
   - fear_greed.py: Import fear and greed data
   - get_binance_btc_0m.py: Import binance trade data
   - get_binance_btc_1d.py: Import binance 1 day data
@@ -175,7 +201,7 @@ python3 tradebot.py
 
 This application was authored by:
 
-- David Lampach
+- David Lampach (davidlampach@gmail.com)
 - Derick DeCesare (derick.decesare@gmail.com)
 - Garrett Hernandez (gtkhhz@gmail.com)
 - Kristen Potter
