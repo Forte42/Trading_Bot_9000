@@ -224,7 +224,7 @@ def bracket_market_buy(symbol, qty, stop_loss, profit_target, strategy='none spe
 
 				rs = conn.execute(f'INSERT INTO sell_orders (Order_id, Symbol, Transact_Time, Price, Ordered_Qty, Executed_Qty, Cost_Basis, Status, Time_In_Force, Order_Type, Order_Side, Linked_Order, Strategy) VALUES ({order_id},"{symbol}", {transact_time}, {price}, {ordered_qty}, {executed_qty}, {cost_basis},"{status}","{time_in_force}", "{order_type}", "{order_side}",{buy_link}, "{strategy}")')
 				rs = conn.execute(f'UPDATE buy_orders SET Linked_Order = {order_id} WHERE Order_id = "{order_id}";') 
-			i=0
+				i=0
 			
 			if last_trade_id < stop_loss:
 				
@@ -246,3 +246,42 @@ def bracket_market_buy(symbol, qty, stop_loss, profit_target, strategy='none spe
 				rs = conn.execute(f'UPDATE buy_orders SET Linked_Order = {order_id} WHERE Order_id = "{buy_link}";') 
 				i=0
 
+def get_bitcoin_market_depth():
+	
+	"""This function returns the current depth of the binance bitcoin market.  It returns a dataframe of numpy arrays """
+		
+	import os
+	from dotenv import load_dotenv
+	from binance.spot import Spot 
+	import pandas as pd
+	from sqlalchemy import create_engine
+	from binance.lib.utils import config_logging
+	from binance.error import ClientError
+	import time
+	from sqlalchemy.exc import SQLAlchemyError
+	import numpy as np
+
+	# Load environmental variables
+
+	load_dotenv()
+	api_key = os.environ.get('binance_api')
+	api_secret = os.environ.get('binance_secret')
+	host = os.getenv("HOST")
+	dbname = os.getenv("DBNAME")
+	username = os.getenv("USERNAME")
+	password = os.getenv("PASSWORD")
+
+	# Initialize Binance Client
+
+	client = Spot(key=api_key, secret=api_secret, base_url='https://testnet.binance.vision')
+
+	# Create sqlalchemy MySQL Connection                                                                                                                                                                  
+	engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}/{dbname}",)
+	conn = engine.connect()
+
+	depth=client.depth('BTCUSDT')
+
+	depth = pd.DataFrame(depth)
+	depth = depth[['bids','asks']]
+
+	return depth
