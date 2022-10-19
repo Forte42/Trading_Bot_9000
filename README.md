@@ -90,6 +90,7 @@ All of the dependencies are listed below:
 
 ```
 apscheduler==3.9.1
+python-binance==1.0.16
 click==8.0.4
 fire==0.4.0
 hvplot==0.8.0
