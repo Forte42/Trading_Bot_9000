@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 import sqlalchemy                                                                                                                                                                                                      
 import pymysql                                                                                                                                                                                                         
                                                                                                                                                                                                                        
-engine = create_engine("mysql+pymysql://admin:52GxbFuetNqvFn@crypto-db.cb84pseap2n8.us-east-1.rds.amazonaws.com:3306/crypto",)                                                                                         
+#engine = create_engine()                                                                                         
                                                                                                                                                                                                                        
 client = Spot()                                                                                                                                                                                                        
                                                                                                                                                                                                                        
