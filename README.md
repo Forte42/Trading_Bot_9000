@@ -109,6 +109,7 @@ SQLAlchemy==1.4.32
 tensorflow==2.10.0
 yfinance==0.1.77
 talib
+binance-connector-python==0.6.0
 ```
 For linux users having trouble installing talib use the following script:
 
